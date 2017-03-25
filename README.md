@@ -2,6 +2,10 @@
 [![npm version](https://badge.fury.io/js/de.appplant.cordova.plugin.local-notification.svg)](http://badge.fury.io/js/de.appplant.cordova.plugin.local-notification)
 [![PayPayl donate button](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L3HKQCD9UA35A "Donate once-off to this project using Paypal")
 
+## Fathom Minds fork
+
+This plugin forked by Fathom Minds to applying required updates and/or customizations, which not contained by the original plugin.
+
 ## Important notice
 1. Its been a while that the plugin has received major updates and bug fixes. My (free)time is limited and I have multiple projects to maintain. Once I've updated my background-mode plugin the local-notification plugin will get an official release supporting ios10. The ios10 branch will be merged into the master as well.
 
