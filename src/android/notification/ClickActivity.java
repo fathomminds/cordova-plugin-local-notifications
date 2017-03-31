@@ -39,7 +39,7 @@ public class ClickActivity extends AbstractClickActivity {
      */
     @Override
     public void onClick(Notification notification) {
-        launchApp();
+        launchApp(notification);
 
         if (notification.isRepeating()) {
             // Customized for Beralarm

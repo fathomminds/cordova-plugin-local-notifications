@@ -96,18 +96,20 @@ abstract public class AbstractClickActivity extends Activity {
     /**
      * Launch main intent from package.
      */
-    public void launchApp() {
-        Context context = getApplicationContext();
-        String pkgName  = context.getPackageName();
+     public void launchApp(Notification notification) {
+         Context context = getApplicationContext();
+         String pkgName  = context.getPackageName();
 
-        Intent intent = context
-                .getPackageManager()
-                .getLaunchIntentForPackage(pkgName);
+         Intent intent = context
+                 .getPackageManager()
+                 .getLaunchIntentForPackage(pkgName);
 
-        intent.addFlags(
-                Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+         intent.putExtra("notification", notification.toString());
 
-        context.startActivity(intent);
-    }
+         intent.addFlags(
+                 Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+         context.startActivity(intent);
+     }
 
 }
