@@ -23,6 +23,12 @@
 
 package de.appplant.cordova.plugin.notification;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+
 /**
  * The alarm receiver is triggered when a scheduled alarm is fired. This class
  * reads the information in the intent and displays this information in the
@@ -42,6 +48,35 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
      */
     @Override
     public void onTrigger (Notification notification, boolean updated) {
+        Boolean isExactRepeater = notification.getOptions().isExactRepeater();
+        if (isExactRepeater) {
+            Integer id = notification.getOptions().getId();
+            long interval = notification.getOptions().getRepeatInterval();
+            long triggerTime = System.currentTimeMillis() + interval;
+            Context context = notification.getContext();
+            AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+            // Use RepeaterReceiver
+            //receiver = RepeaterReceiver.class;
+            Intent intent = new Intent(context, TriggerReceiver.class)
+                    .setAction(notification.getOptions().getIdStr())
+                    .putExtra(Options.EXTRA, notification.getOptions().toString());
+
+            PendingIntent pi = PendingIntent.getBroadcast(
+                    context, id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            // Set an ExactAndAllowWhileIdle schedule with the RepeaterReceiver
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi);
+            }
+            else if (android.os.Build.VERSION.SDK_INT >= 19) {
+                alarmMgr.setExact(AlarmManager.RTC_WAKEUP, triggerTime, pi);
+            }
+            else
+            {
+                alarmMgr.set(AlarmManager.RTC_WAKEUP, triggerTime, pi);
+            }
+        }
         notification.show();
     }
 
