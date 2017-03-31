@@ -186,7 +186,6 @@ public class Notification {
                  pi = PendingIntent.getBroadcast(
                          context, options.getId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-                 // Set an ExactAndAllowWhileIdle schedule with the RepeaterReceiver
                  if (android.os.Build.VERSION.SDK_INT >= 23) {
                      getAlarmMgr().setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi);
                  }

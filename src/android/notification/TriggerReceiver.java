@@ -56,8 +56,6 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
             Context context = notification.getContext();
             AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-            // Use RepeaterReceiver
-            //receiver = RepeaterReceiver.class;
             Intent intent = new Intent(context, TriggerReceiver.class)
                     .setAction(notification.getOptions().getIdStr())
                     .putExtra(Options.EXTRA, notification.getOptions().toString());
@@ -65,8 +63,7 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
             PendingIntent pi = PendingIntent.getBroadcast(
                     context, id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            // Set an ExactAndAllowWhileIdle schedule with the RepeaterReceiver
-            if (android.os.Build.VERSION.SDK_INT >= 23) {
+          if (android.os.Build.VERSION.SDK_INT >= 23) {
                 alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi);
             }
             else if (android.os.Build.VERSION.SDK_INT >= 19) {
