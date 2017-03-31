@@ -117,7 +117,7 @@ public class Options {
             interval = AlarmManager.INTERVAL_DAY * 365;
         } else {
             try {
-                if (every.substring(0, 6).equals("exact|"))
+                if (every.length() > 6 && every.substring(0, 6).equals("exact|"))
                 {
                     interval = Integer.parseInt(every.substring(6))*1000;
                 }
