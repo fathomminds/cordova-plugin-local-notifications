@@ -162,32 +162,56 @@ public class Notification {
     /**
      * Schedule the local notification.
      */
-    public void schedule() {
-        long triggerTime = options.getTriggerTime();
+     public void schedule() {
+         long triggerTime = options.getTriggerTime();
+         Boolean exactRepeater = options.isExactRepeater();
 
-        persist();
+         persist();
 
-        // Intent gets called when the Notification gets fired
-        Intent intent = new Intent(context, receiver)
-                .setAction(options.getIdStr())
-                .putExtra(Options.EXTRA, options.toString());
+         // Intent gets called when the Notification gets fired
+         Intent intent = new Intent(context, receiver)
+                 .setAction(options.getIdStr())
+                 .putExtra(Options.EXTRA, options.toString());
 
-        PendingIntent pi = PendingIntent.getBroadcast(
-                context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+         PendingIntent pi = PendingIntent.getBroadcast(
+                 context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        if (isRepeating()) {
-            getAlarmMgr().setRepeating(AlarmManager.RTC_WAKEUP,
-                    triggerTime, options.getRepeatInterval(), pi);
-        } else {
-            if (android.os.Build.VERSION.SDK_INT >= 19) {
-                getAlarmMgr().setExact(AlarmManager.RTC_WAKEUP, triggerTime, pi);
-            }
-            else
-            {
-                getAlarmMgr().set(AlarmManager.RTC_WAKEUP, triggerTime, pi);
-            }
-        }
-    }
+         if (isRepeating()) {
+             if (exactRepeater)
+             {
+                 intent = new Intent(context, receiver)
+                         .setAction(options.getIdStr())
+                         .putExtra(Options.EXTRA, options.toString());
+
+                 pi = PendingIntent.getBroadcast(
+                         context, options.getId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                 if (android.os.Build.VERSION.SDK_INT >= 23) {
+                     getAlarmMgr().setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi);
+                 }
+                 else if (android.os.Build.VERSION.SDK_INT >= 19) {
+                     getAlarmMgr().setExact(AlarmManager.RTC_WAKEUP, triggerTime, pi);
+                 }
+                 else
+                 {
+                     getAlarmMgr().set(AlarmManager.RTC_WAKEUP, triggerTime, pi);
+                 }
+             }
+             else
+             {
+                 getAlarmMgr().setRepeating(AlarmManager.RTC_WAKEUP,
+                       triggerTime, options.getRepeatInterval(), pi);
+             }
+         } else {
+             if (android.os.Build.VERSION.SDK_INT >= 19) {
+                 getAlarmMgr().setExact(AlarmManager.RTC_WAKEUP, triggerTime, pi);
+             }
+             else
+             {
+                 getAlarmMgr().set(AlarmManager.RTC_WAKEUP, triggerTime, pi);
+             }
+         }
+     }
 
     /**
      * Clear the local notification without canceling repeating alarms.
@@ -210,15 +234,24 @@ public class Notification {
      * method and cancel it.
      */
     public void cancel() {
-        Intent intent = new Intent(context, receiver)
-                .setAction(options.getIdStr());
-
-        PendingIntent pi = PendingIntent.
-                getBroadcast(context, 0, intent, 0);
-
-        getAlarmMgr().cancel(pi);
-        getNotMgr().cancel(options.getId());
-
+        Boolean exactRepeater = options.isExactRepeater();
+        if (exactRepeater) {
+            Intent intent = new Intent(context, TriggerReceiver.class)
+                    .setAction(options.getIdStr());
+            PendingIntent pi = PendingIntent.
+                    getBroadcast(context, options.getId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            getAlarmMgr().cancel(pi);
+            getNotMgr().cancel(options.getId());
+        }
+        else
+        {
+            Intent intent = new Intent(context, receiver)
+                    .setAction(options.getIdStr());
+            PendingIntent pi = PendingIntent.
+                    getBroadcast(context, 0, intent, 0);
+            getAlarmMgr().cancel(pi);
+            getNotMgr().cancel(options.getId());
+        }
         unpersist();
     }
 

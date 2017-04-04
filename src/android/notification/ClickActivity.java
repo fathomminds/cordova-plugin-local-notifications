@@ -39,10 +39,14 @@ public class ClickActivity extends AbstractClickActivity {
      */
     @Override
     public void onClick(Notification notification) {
-        launchApp();
+        launchApp(notification);
 
         if (notification.isRepeating()) {
-            notification.clear();
+            // Customized for Beralarm
+            // Repeating Notification should not be cleared when user clicks
+            // Notifications to be cleared only from the app
+            // This behaviour will be in line with iOS behaviour too
+            // notification.clear();
         } else {
             notification.cancel();
         }

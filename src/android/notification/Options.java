@@ -117,7 +117,14 @@ public class Options {
             interval = AlarmManager.INTERVAL_DAY * 365;
         } else {
             try {
-                interval = Integer.parseInt(every) * 60000;
+                if (every.length() > 6 && every.substring(0, 6).equals("exact|"))
+                {
+                    interval = Integer.parseInt(every.substring(6))*1000;
+                }
+                else
+                {
+                    interval = Integer.parseInt(every) * 60000;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -169,6 +176,14 @@ public class Options {
      */
     public long getRepeatInterval() {
         return interval;
+    }
+
+    public Boolean isExactRepeater() {
+        String every = options.optString("every").toLowerCase();
+        if (every.length() > 6) {
+            return every.substring(0, 6).equals("exact|");
+        }
+        return false;
     }
 
     /**
