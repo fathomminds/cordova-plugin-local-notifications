@@ -184,7 +184,7 @@ public class Notification {
                          .putExtra(Options.EXTRA, options.toString());
 
                  pi = PendingIntent.getBroadcast(
-                         context, options.getId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                         context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                  if (android.os.Build.VERSION.SDK_INT >= 23) {
                      getAlarmMgr().setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi);
@@ -239,7 +239,7 @@ public class Notification {
             Intent intent = new Intent(context, TriggerReceiver.class)
                     .setAction(options.getIdStr());
             PendingIntent pi = PendingIntent.
-                    getBroadcast(context, options.getId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             getAlarmMgr().cancel(pi);
             getNotMgr().cancel(options.getId());
         }

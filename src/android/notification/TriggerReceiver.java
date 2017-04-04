@@ -61,7 +61,7 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
                     .putExtra(Options.EXTRA, notification.getOptions().toString());
 
             PendingIntent pi = PendingIntent.getBroadcast(
-                    context, id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
           if (android.os.Build.VERSION.SDK_INT >= 23) {
                 alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi);
