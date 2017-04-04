@@ -49,9 +49,9 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
     @Override
     public void onTrigger (Notification notification, boolean updated) {
         Boolean isExactRepeater = notification.getOptions().isExactRepeater();
-        if (isExactRepeater) {
+        long interval = notification.getOptions().getRepeatInterval();
+        if (isExactRepeater && interval > 0) {
             Integer id = notification.getOptions().getId();
-            long interval = notification.getOptions().getRepeatInterval();
             long triggerTime = System.currentTimeMillis() + interval;
             Context context = notification.getContext();
             AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
