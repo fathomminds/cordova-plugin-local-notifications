@@ -214,7 +214,7 @@ public class LocalNotification extends CordovaPlugin {
             JSONObject options = notifications.optJSONObject(i);
 
             Notification notification =
-                    getNotificationMgr().schedule(options, TriggerReceiver.class);
+                    getNotificationMgr().schedule(options, de.appplant.cordova.plugin.notification.TriggerReceiver.class);
 
             fireEvent("schedule", notification);
         }
